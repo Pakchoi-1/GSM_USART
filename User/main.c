@@ -49,7 +49,10 @@ int main(void)
 		if(t==20)
 		{
 			t=0;
-			cot++;
+			
+			if(lock==4) cot=0;
+			else 	cot++;
+			
 			if(cot==10){ lock=1;}
 //   LED1_TOGGLE;
 		GPIOC->ODR&=~(1<<13);
