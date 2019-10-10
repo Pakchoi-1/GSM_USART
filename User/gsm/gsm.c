@@ -270,11 +270,6 @@ void gsm_send_message(uint8* pmsg)
 //	gsm_send_cmd("AT+CMGS=+8615840956725\r\n");	// 设置目的手机号码 
 //	gsm_send_cmd("tc35 recieve cmd ok!\x01a");// 设置短消息
 	
-	gsm_send_cmd("AT\r\n");
-	gsm_send_cmd("AT\r\n");
-	gsm_send_cmd("AT\r\n");
-  gsm_send_cmd("AT+CSCS=\"GSM\"\r\n"); 			// 设置GSM字符集
-  gsm_send_cmd("AT+CMGF=1\r\n");				// 设置短消息为text模式
 	delay(5);
 	
 	memcpy((cmd+9), PhoneNumber, 11);//这里是将消息发送到发送短信查询的手机上。所以改程序的时候需要设置一个固定的号码

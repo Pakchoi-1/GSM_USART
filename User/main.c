@@ -16,7 +16,7 @@ unsigned char send_message(void);
   */
 int main(void)
 {	 	    
-	u8 t;   
+	u8 t,cot=0;   
 	
   delay_init();	    	 //延时函数初始化	 
 	USART_Config();
@@ -44,21 +44,23 @@ int main(void)
 			
 	 	OLED_ShowString(120,0,"*",12);  
 		}				   
-	 	delay_ms(8);
+	 	delay_ms(10);
 		t++;
 		if(t==20)
 		{
 			t=0;
+			cot++;
+			if(cot==10){ lock=1;}
 //   LED1_TOGGLE;
 		GPIOC->ODR&=~(1<<13);
 		}
 		
-		if((lock==0) && strstr(GsmBuf, "+PBREADY"))lock=1;	  //开机消息
-	  if((!(GPIOA->IDR&(1<<1)))&&(lock==2)) lock=1;
+//		if((lock==0) && strstr(GsmBuf, "+PBREADY"))lock=1;	  //开机消息
+//	  if((!(GPIOA->IDR&(1<<6)))&&(lock==2)) lock=1;
 		if(lock==1)	
 		 {	
 			 send_message();
-			 lock=2;
+			 lock=4;
 		 }		
 
 	}
