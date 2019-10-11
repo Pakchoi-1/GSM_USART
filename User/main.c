@@ -6,7 +6,7 @@ const int Figure[10] = {'0','1','2','3','4','5','6','7','8','9'};
 	u8 temperature;  	    
 	u8 humidity;
 
-uint8  lock=0;
+uint8  lock=1,error=0,agree=0;
 
 unsigned char send_message(void);
 /**
@@ -20,7 +20,8 @@ int main(void)
 	
   delay_init();	    	 //延时函数初始化	 
 	USART_Config();
-	OLED_Init();			//初始化OLED   
+	OLED_Init();			//初始化OLED  
+	LED_GPIO_Config();
   GPIOC->ODR|=(1<<13);
 
  	while(DHT11_Init())	//DHT11初始化	
@@ -41,31 +42,42 @@ int main(void)
 		DHT11_Read_Data(&temperature,&humidity);	//读取温湿度值
 		OLED_ShowNum(28,32,temperature,2,12);//显示温度	  
 		OLED_ShowNum(28,48,humidity,2,12);//显示湿度	
-			
-	 	OLED_ShowString(120,0,"*",12);  
+		OLED_Refresh_Gram();		//更新显示到OLED 
 		}				   
 	 	delay_ms(10);
 		t++;
 		if(t==20)
-		{
-			t=0;
-			
-			if(lock==4) cot=0;
-			else 	cot++;
-			
-			if(cot==10){ lock=1;}
-//   LED1_TOGGLE;
-		GPIOC->ODR&=~(1<<13);
-		}
-		
-//		if((lock==0) && strstr(GsmBuf, "+PBREADY"))lock=1;	  //开机消息
-//	  if((!(GPIOA->IDR&(1<<6)))&&(lock==2)) lock=1;
+		{	t=0;
+
 		if(lock==1)	
 		 {	
 			 send_message();
-			 lock=4;
-		 }		
+			 lock=2;
+		 }	
+			
+//			if((error==1)&&(agree==0)) cot++;
+//			else 	cot=0;
+//			if(cot==50){ lock=2;agree=1;error=0;}
 
+		}
+		
+//		if((lock==0) && strstr(GsmBuf, "+PBREADY"))lock=1;	  //开机成功
+		
+		
+	  if(!(GPIOA->IDR&(1<<6)))
+		{      
+				delay_ms(20);
+			if(!(GPIOA->IDR&(1<<6)))
+			{
+				LED1_TOGGLE;
+			  lock=1;
+//				agree=0;
+				
+			}
+			while(!(GPIOA->IDR&(1<<6)));
+		}
+		
+		
 	}
 }
 
@@ -92,7 +104,9 @@ unsigned char send_message(void)
 		}
  }
 	
-	sprintf(sms_data,"\n%s",heard);
+ 
+  memset(sms_data, 0, sizeof(sms_data));
+	sprintf(sms_data,"%s",heard);
 	strcat(sms_data,"\ntemperature:");
   len = strlen(sms_data);
   memcpy(sms_data+len, &dat[1], 1);
@@ -120,7 +134,11 @@ unsigned char send_message(void)
 	  OLED_ShowString(60,48,"DHT11 scuss",12);
 	
 	}
-	else 	OLED_ShowString(60,48,"DHT11 failed",12);
+	else 	
+	{
+		OLED_ShowString(60,48,"DHT11 failed",12);
+	  error=1;
+	}
 }
 
 /*********************************************END OF FILE**********************/

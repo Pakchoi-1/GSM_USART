@@ -11,6 +11,11 @@
 #define LED1_GPIO_PIN		    GPIO_Pin_13			        
 
 
+#define KEY_GPIO_PORT    	GPIOA			              /* GPIO¶Ë¿Ú */
+#define KEY_GPIO_CLK 	    RCC_APB2Periph_GPIOA		/* GPIO¶Ë¿ÚÊ±ÖÓ */
+#define KEY_GPIO_PIN		  GPIO_Pin_6			        
+
+
 /** the macro definition to trigger the led on or off 
   * 1 - off
   *0 - on
