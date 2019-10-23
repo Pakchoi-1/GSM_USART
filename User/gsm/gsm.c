@@ -2,8 +2,7 @@
 #include "bsp_usart.h"
 
 //char PhoneNumber[12]="15708290686";//18208223504
-char PhoneNumber[12]="18227814091";//13708290921
-
+char PhoneNumber[12]="18227814091";//13708290921   18227814091  18054720965
 
 uint16 GsmRecvLen;
 int8 GsmBuf[100];

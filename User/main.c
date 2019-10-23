@@ -26,7 +26,7 @@ int main(void)
 
  	while(DHT11_Init())	//DHT11初始化	
 	{
-		OLED_ShowString(60,48,"DHT11 Error",12);
+		OLED_ShowString(60,40,"DHT11 Error",12);
 		delay_ms(200);	
 	}
   OLED_Clear();
@@ -75,6 +75,8 @@ int main(void)
 				
 			}
 			while(!(GPIOA->IDR&(1<<6)));
+				OLED_Fill(60,40,120,52,0);
+			  OLED_ShowString(60,40,"Key Test",12);
 		}
 		
 		
@@ -84,11 +86,14 @@ int main(void)
 
 unsigned char send_message(void)
 {
-	char heard[] = "gsm temperature and humidity";
+	char heard[] = "gsm test temperature and humidity";
 	
 	int i,j,len;
 	
 	char dat[5];
+	
+	delay_ms(50);
+	DHT11_Read_Data(&temperature,&humidity);	//读取温湿度值
 	
 	dat[1] = (temperature/10) ;
 	dat[0]= (temperature%10) ;
@@ -121,24 +126,25 @@ unsigned char send_message(void)
 	
   gsm_send_cmd("AT\r\n");
 	gsm_send_cmd("AT\r\n");
-	
   gsm_send_cmd("AT+CSCS=\"GSM\"\r\n"); 			// 设置GSM字符集
   gsm_send_cmd("AT+CMGF=1\r\n");				// 设置短消息为text模式
 	delay_ms(5);
 	gsm_send_message(sms_data);
 	
-	delay_ms(50);
-	
+	delay_ms(2000);
+	OLED_Fill(60,40,120,52,0);
 	if (strstr(GsmBuf, "OK"))// 命令发送成功
 	{
-	  OLED_ShowString(60,48,"DHT11 scuss",12);
+	  OLED_ShowString(60,40,"Send scuss",12);
 	
 	}
 	else 	
 	{
-		OLED_ShowString(60,48,"DHT11 failed",12);
+		OLED_ShowString(60,40,"Send fail",12);
 	  error=1;
 	}
+	
+	
 }
 
 /*********************************************END OF FILE**********************/
