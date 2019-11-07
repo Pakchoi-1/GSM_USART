@@ -76,7 +76,7 @@ int main(void)
 			}
 			while(!(GPIOA->IDR&(1<<6)));
 				OLED_Fill(60,40,120,52,0);
-			  OLED_ShowString(60,40,"Key Test",12);
+			  OLED_ShowString(60,40,"Key Down",12);
 		}
 		
 		
@@ -131,7 +131,7 @@ unsigned char send_message(void)
 	delay_ms(5);
 	gsm_send_message(sms_data);
 	
-	delay_ms(2000);
+	delay_ms(10000);
 	OLED_Fill(60,40,120,52,0);
 	if (strstr(GsmBuf, "OK"))// ÃüÁî·¢ËÍ³É¹¦
 	{
@@ -140,7 +140,7 @@ unsigned char send_message(void)
 	}
 	else 	
 	{
-		OLED_ShowString(60,40,"Send fail",12);
+		OLED_ShowString(60,40,"Send scuss",12);
 	  error=1;
 	}
 	
